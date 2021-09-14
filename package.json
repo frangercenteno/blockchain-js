@@ -1,0 +1,36 @@
+{
+  "name": "blockchain-js",
+  "version": "1.0.0",
+  "description": "Blockchain created with JS based in Bitcoin",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "babel-node index.js",
+    "nodemon": "nodemon --exec npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frangercenteno/blockchain-js.git"
+  },
+  "keywords": [
+    "blockchain",
+    "js",
+    "bitcoin",
+    "node"
+  ],
+  "author": "Franger Centeno",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/frangercenteno/blockchain-js/issues"
+  },
+  "homepage": "https://github.com/frangercenteno/blockchain-js#readme",
+  "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/node": "^7.15.4",
+    "@babel/preset-env": "^7.15.6",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.2",
+    "nodemon": "^2.0.12"
+  }
+}
