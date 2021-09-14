@@ -1,3 +1,10 @@
-import PKG from './package.json';
+import Block from './src/blockchain/block';
 
-console.log('Hi world!!', PKG.author);
+const { genesis } = Block;
+
+const block1 = Block.mine(genesis, 'd4t4-1');
+const block2 = Block.mine(block1, 'd4t4-1');
+
+console.log(block1.toString());
+
+console.log(block2.toString());
