@@ -1,3 +1,5 @@
+import { SHA256 } from 'crypto-js';
+
 class Block {
   constructor(timestamp, prevHash, hash, data) {
     this.timestamp = timestamp;
@@ -16,10 +18,15 @@ class Block {
   // Mine
   static mine(prevBlock, data) {
     const timestamp = Date.now();
-    const hash = '@todo-hash';
     const { hash: previousHash } = prevBlock;
+    const hash = this.hash(timestamp, previousHash, data);
 
     return new this(timestamp, previousHash, hash, data);
+  }
+
+  // secure hash algorithm
+  static hash(timestamp, prevHash, data) {
+    return SHA256(`${timestamp}${prevHash}${data}`).toString();
   }
 
   toString() {
