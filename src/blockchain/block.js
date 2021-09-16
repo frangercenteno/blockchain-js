@@ -18,10 +18,10 @@ class Block {
   // Mine
   static mine(prevBlock, data) {
     const timestamp = Date.now();
-    const { hash: previousHash } = prevBlock;
-    const hash = this.hash(timestamp, previousHash, data);
+    const { hash: prevHash } = prevBlock;
+    const hash = this.hash(timestamp, prevHash, data);
 
-    return new this(timestamp, previousHash, hash, data);
+    return new this(timestamp, prevHash, hash, data);
   }
 
   // secure hash algorithm
