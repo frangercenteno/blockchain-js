@@ -1,11 +1,14 @@
 import { SHA256 } from 'crypto-js';
 
+const DIFFICULTY = 3;
+
 class Block {
-  constructor(timestamp, prevHash, hash, data) {
+  constructor(timestamp, prevHash, hash, data, nonce) {
     this.timestamp = timestamp;
     this.prevHash = prevHash;
     this.hash = hash;
     this.data = data;
+    this.nonce = nonce;
   }
 
   // Genesis Block
@@ -17,28 +20,36 @@ class Block {
 
   // Mine
   static mine(prevBlock, data) {
-    const timestamp = Date.now();
     const { hash: prevHash } = prevBlock;
-    const hash = this.hash(timestamp, prevHash, data);
+    let nonce = 0;
+    let timestamp;
+    let hash;
+    // Proof of work
+    do {
+      timestamp = Date.now();
+      nonce += 1;
+      hash = this.hash(timestamp, prevHash, data, nonce);
+    } while (hash.substring(0, DIFFICULTY) !== '0'.repeat(DIFFICULTY));
 
-    return new this(timestamp, prevHash, hash, data);
+    return new this(timestamp, prevHash, hash, data, nonce);
   }
 
   // secure hash algorithm
-  static hash(timestamp, prevHash, data) {
-    return SHA256(`${timestamp}${prevHash}${data}`).toString();
+  static hash(timestamp, prevHash, data, nonce) {
+    return SHA256(`${timestamp}${prevHash}${data}${nonce}`).toString();
   }
 
   toString() {
     const {
-      timestamp, prevHash, hash, data,
+      timestamp, prevHash, hash, data, nonce
     } = this;
 
     return `Block - 
       timestamp:            ${timestamp}
       prevHash:             ${prevHash}
       hash:                 ${hash}
-      data:                 ${data}`;
+      data:                 ${data}
+      nonce:                ${nonce}`;
   }
 }
 
