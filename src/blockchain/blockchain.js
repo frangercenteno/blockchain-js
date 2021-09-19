@@ -1,15 +1,11 @@
 import Block from './block';
 import validate from './modules/validate';
-
-/**
- * Depend of Block class
- * Every instance initialized with one Genesis Block
- * It has a method that facilitates creation of new blocks
- */
+import MemoryPool from './memoryPool';
 
 class Blockchain {
   constructor() {
     this.blocks = [Block.genesis];
+    this.memoryPool = new MemoryPool();
   }
 
   addBlock(data) {

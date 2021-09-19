@@ -1,55 +1,57 @@
-import { SHA256 } from 'crypto-js';
+import adjustDifficulty from './modules/adjustDifficulty';
+import genHash from '../modules/hash';
 
 const DIFFICULTY = 3;
 
 class Block {
-  constructor(timestamp, prevHash, hash, data, nonce) {
+  constructor(timestamp, previousHash, hash, data, nonce, difficulty) {
     this.timestamp = timestamp;
-    this.prevHash = prevHash;
+    this.previousHash = previousHash;
     this.hash = hash;
     this.data = data;
     this.nonce = nonce;
+    this.difficulty = difficulty;
   }
 
-  // Genesis Block
   static get genesis() {
-    // fake timestamp, it should actual date
     const timestamp = (new Date(2000, 0, 1)).getTime();
-    return new this(timestamp, undefined, 'g3n3s1s-h4sh', 'i like arepa');
+    return new this(timestamp, undefined, 'g3n3s1s-h4sh', 'i like ramen.', 0, DIFFICULTY);
   }
 
-  // Mine
-  static mine(prevBlock, data) {
-    const { hash: prevHash } = prevBlock;
+  static mine(previousBlock, data) {
+    const { hash: previousHash } = previousBlock;
+    let hash;
     let nonce = 0;
     let timestamp;
-    let hash;
-    // Proof of work
+    let { difficulty } = previousBlock;
+
     do {
       timestamp = Date.now();
       nonce += 1;
-      hash = this.hash(timestamp, prevHash, data, nonce);
-    } while (hash.substring(0, DIFFICULTY) !== '0'.repeat(DIFFICULTY));
+      difficulty = adjustDifficulty(previousBlock, timestamp);
+      hash = Block.hash(timestamp, previousHash, data, nonce, difficulty);
+    } while (hash.substring(0, difficulty) !== '0'.repeat(difficulty));
 
-    return new this(timestamp, prevHash, hash, data, nonce);
+    return new this(timestamp, previousHash, hash, data, nonce, difficulty);
   }
 
-  // secure hash algorithm
-  static hash(timestamp, prevHash, data, nonce) {
-    return SHA256(`${timestamp}${prevHash}${data}${nonce}`).toString();
+  static hash(timestamp, previousHash, data, nonce, difficulty) {
+    return genHash(`${timestamp}${previousHash}${data}${nonce}${difficulty}`);
   }
 
   toString() {
     const {
-      timestamp, prevHash, hash, data, nonce
+      timestamp, previousHash, hash, data, nonce, difficulty,
     } = this;
 
-    return `Block - 
-      timestamp:            ${timestamp}
-      prevHash:             ${prevHash}
-      hash:                 ${hash}
-      data:                 ${data}
-      nonce:                ${nonce}`;
+    return `Block -
+      timestamp       : ${timestamp}
+      previousHash    : ${previousHash}
+      hash            : ${hash}
+      data            : ${data}
+      nonce           : ${nonce}
+      difficulty      : ${difficulty}
+    `;
   }
 }
 
